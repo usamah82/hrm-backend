@@ -1,0 +1,44 @@
+{
+  "name": "Rails Devise GraphQL",
+  "description": "This is a boilerplate to build your next Saas product. It's a RubyOnRails 5 API only backend with Authentication and GrpahQL API.",
+  "keywords": [
+    "saas",
+    "ruby-on-rails",
+    "rails5",
+    "devise",
+    "graphql",
+    "apollo-server",
+    "ruby-graphql",
+    "rails-api-only",
+    "api-only"
+  ],
+  "website": "https://kitikiti-hrm.com/",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "rake db:migrate && rake db:seed"
+  },
+  "env": {
+    "CLIENT_URL": {
+      "description": "Enter the client domain for CORS.",
+      "value": "http://0.0.0.0:8000"
+    },
+    "WEB_CONCURRENCY": {
+      "description": "Specifies the number of `workers` to boot in clustered mode.",
+      "value": "2"
+    },
+    "RAILS_MAX_THREADS": {
+      "description": "Puma can serve each request in a thread from an internal thread pool.",
+      "value": "5"
+    },
+    "DEVISE_JWT_SECRET_KEY": {
+      "description": "A secret key for verifying the integrity of signed JWT tokens.",
+      "generator": "secret"
+    }
+  },
+  "image": "heroku/ruby",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev"
+    }
+  ]
+}
