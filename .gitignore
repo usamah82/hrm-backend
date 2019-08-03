@@ -29,3 +29,5 @@ coverage
 /config/master.key
 
 .env
+
+.vscode
