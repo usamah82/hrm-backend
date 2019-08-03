@@ -1,3 +1,4 @@
+# User
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
   include Tokenizable
@@ -6,7 +7,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
          :registerable,
-         :recoverable, 
+         :recoverable,
          :devise,
          :validatable,
          :trackable,
@@ -38,11 +39,10 @@ class User < ApplicationRecord
 
   # return first and lastname
   def name
-    [first_name, last_name].join(' ').strip
+    [first_name, last_name].join(" ").strip
   end
 
   private def setup_new_user
     self.role ||= :customer
   end
-
 end

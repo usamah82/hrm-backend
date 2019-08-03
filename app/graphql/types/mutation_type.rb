@@ -1,26 +1,30 @@
 module Types
+  # MutationType
   class MutationType < Types::BaseObject
-    
     ## LOGIN
     field :login, UserType, null: true do
       description "Login for users"
       argument :email, String, required: true
       argument :password, String, required: true
     end
+
+    # Login
     def login(email:, password:)
       user = User.find_for_authentication(email: email)
       return nil if !user
-      
-      is_valid_for_auth = user.valid_for_authentication?{
+
+      is_valid_for_auth = user.valid_for_authentication? {
         user.valid_password?(password)
       }
-      return is_valid_for_auth ? user : nil
+      is_valid_for_auth ? user : nil
     end
 
     ## TOKEN-LOGIN
     field :token_login, UserType, null: true do
       description "JWT token login"
     end
+
+    # Token login
     def token_login
       context[:current_user]
     end
@@ -29,25 +33,26 @@ module Types
     field :logout, Boolean, null: true do
       description "Logout for users"
     end
+
+    # Logout
     def logout
       if context[:current_user]
         context[:current_user].update(jti: SecureRandom.uuid)
         return true
-      end 
+      end
       false
     end
 
-    # Uncomment to enable features
-  
     field :update_user, UserType, null: true do
       description "Update user"
       argument :password, String, required: false
       argument :passwordConfirmation, String, required: false
     end
 
+    # Update user
     def update_user(
-        password: context[:current_user] ? context[:current_user].password : '',
-        password_confirmation: context[:current_user] ? context[:current_user].password_confirmation : ''
+        password: context[:current_user] ? context[:current_user].password : "",
+        password_confirmation: context[:current_user] ? context[:current_user].password_confirmation : ""
       )
       user = context[:current_user]
       return nil if !user
@@ -57,7 +62,7 @@ module Types
       )
       user
     end
-  
+
     field :sign_up, UserType, null: true do
       description "Sign up for users"
       argument :email, String, required: true
@@ -66,12 +71,14 @@ module Types
       argument :firstName, String, required: true
       argument :lastName, String, required: true
     end
+
+    # Sign up
     def sign_up(email:, password:, password_confirmation:, first_name:, last_name:)
       User.create(
-        email: email, 
-        password: password, 
-        password_confirmation: password_confirmation, 
-        first_name: first_name, 
+        email: email,
+        password: password,
+        password_confirmation: password_confirmation,
+        first_name: first_name,
         last_name: last_name
       )
     end
@@ -80,6 +87,8 @@ module Types
       description "Send password reset instructions to users email"
       argument :email, String, required: true
     end
+
+    # Send reset password instructions
     def send_reset_password_instructions(email:)
       user = User.find_by_email(email)
       return true if !user
@@ -92,34 +101,36 @@ module Types
       argument :passwordConfirmation, String, required: true
       argument :resetPasswordToken, String, required: true
     end
+
+    # Reset password
     def reset_password(password:, password_confirmation:, reset_password_token:)
       user = User.with_reset_password_token(reset_password_token)
       return false if !user
       user.reset_password(password, password_confirmation)
-    end  
+    end
 
-    #
-    # uncomment for unlock instructions
-    #
     # UNLOCK ACCOUNT
-    # field :unlock, Boolean, null: false do
-    #   argument :unlockToken, String, required: true
-    # end
-    # def unlock(unlock_token:)
-    #   user = User.unlock_access_by_token(unlock_token)
-    #   return user.id
-    # end
+    field :unlock, Boolean, null: false do
+      argument :unlockToken, String, required: true
+    end
+
+    # Unlock
+    def unlock(unlock_token:)
+      user = User.unlock_access_by_token(unlock_token)
+      user.id
+    end
 
     # RESEND UNLOCK INSTRUCTIONS
-    # field :resend_unlock_instructions, Boolean, null: false do
-    #   argument :email, String, required: true
-    # end
-    # def resend_unlock_instructions(email:)
-    #   user = User.find_by_email(email)
-    #   return false if !user
+    field :resend_unlock_instructions, Boolean, null: false do
+      argument :email, String, required: true
+    end
 
-    #   user.resend_unlock_instructions
-    # end
+    # Resend unlock instructions
+    def resend_unlock_instructions(email:)
+      user = User.find_by_email(email)
+      return false if !user
+
+      user.resend_unlock_instructions
+    end
   end
 end
-  

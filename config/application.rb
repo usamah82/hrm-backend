@@ -1,4 +1,4 @@
-require_relative 'boot'
+require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
@@ -25,7 +25,7 @@ module RailsDeviseGraphql
     config.autoload_paths << Rails.root.join("lib")
     config.eager_load_paths << Rails.root.join("lib")
 
-    # config.autoload_paths += Dir[Rails.root.join('app', 'graphql')]
+    # config.autoload_paths += Dir[Rails.root.join("app", "graphql")]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -36,7 +36,7 @@ module RailsDeviseGraphql
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
 
-    config.time_zone = 'Berlin'
+    config.time_zone = "Berlin"
 
     config.api_only = true
   end
