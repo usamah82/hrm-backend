@@ -39,5 +39,9 @@ module RailsDeviseGraphql
     config.time_zone = "Berlin"
 
     config.api_only = true
+
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
   end
 end
