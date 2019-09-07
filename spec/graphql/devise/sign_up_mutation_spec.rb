@@ -9,14 +9,13 @@ RSpec.describe GraphqlSchema do
     # set query
     prepare_query("
       mutation signUp(
-        $email: String!, $password: String!, $passwordConfirmation: String!, $firstName: String!, $lastName: String!
+        $email: String!, $password: String!, $passwordConfirmation: String!, $name: String!
       ){
         signUp(
           email: $email,
           password: $password,
           passwordConfirmation: $passwordConfirmation,
-          firstName: $firstName,
-          lastName: $lastName
+          name: $name
         ){
           email
         }
@@ -32,8 +31,7 @@ RSpec.describe GraphqlSchema do
         email: user.email,
         password: user.password,
         passwordConfirmation: user.password_confirmation,
-        firstName: user.first_name,
-        lastName: user.last_name
+        name: user.name
       )
     }
 

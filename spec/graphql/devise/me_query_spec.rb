@@ -25,13 +25,13 @@ RSpec.describe GraphqlSchema do
     context "when there's a current user" do
       before {
         prepare_context(
-          current_user: create(:user, first_name: "A", last_name: "B")
+          current_user: create(:user, name: "John Doe")
         )
       }
 
       it "shows the user's name" do
         user_name = graphql!["data"]["me"]["name"]
-        expect(user_name).to eq("A B")
+        expect(user_name).to eq("John Doe")
       end
     end
   end

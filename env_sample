@@ -4,5 +4,4 @@ RAILS_MAX_THREADS=5
 DEVISE_JWT_SECRET_KEY=replace-this-key-with-a-secret
 ADMIN_EMAIL=demo@kitikiti-hrm.com
 ADMIN_PASSWORD=demo123
-ADMIN_FIRST_NAME=John
-ADMIN_LAST_NAME=Doe
+ADMIN_NAME=John Doe

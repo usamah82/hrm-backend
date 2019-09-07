@@ -68,18 +68,16 @@ module Types
       argument :email, String, required: true
       argument :password, String, required: true
       argument :passwordConfirmation, String, required: true
-      argument :firstName, String, required: true
-      argument :lastName, String, required: true
+      argument :name, String, required: true
     end
 
     # Sign up
-    def sign_up(email:, password:, password_confirmation:, first_name:, last_name:)
+    def sign_up(email:, password:, password_confirmation:, name:)
       User.create(
         email: email,
         password: password,
         password_confirmation: password_confirmation,
-        first_name: first_name,
-        last_name: last_name
+        name: name
       )
     end
 

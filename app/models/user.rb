@@ -24,7 +24,6 @@
 #  failed_attempts        :integer          default(0), not null
 #  unlock_token           :string
 #  locked_at              :datetime
-#  role                   :integer
 #
 
 # User
@@ -39,12 +38,10 @@ class User < ApplicationRecord
          :recoverable,
          :devise,
          :validatable,
+         :lockable,
          :trackable,
          :jwt_authenticatable,
          jwt_revocation_strategy: self
-
-  # add new roles to the end
-  enum role: %i[customer admin]
 
   # - RELATIONS
   # -
@@ -53,25 +50,11 @@ class User < ApplicationRecord
   validates :email, presence: true
   validates :email, length: { maximum: 255 }
   validates :email, format: { with: Regex::Email::VALIDATE }
-  validates :first_name, presence: true
-  validates :first_name, length: { maximum: 255 }
-  validates :last_name, presence: true
-  validates :last_name, length: { maximum: 255 }
-
-  # - CALLBACKS
-  after_initialize :setup_new_user, if: :new_record?
+  validates :name, presence: true
+  validates :name, length: { maximum: 255 }
 
   # Send mail through activejob
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
-  end
-
-  # return first and lastname
-  def name
-    [first_name, last_name].join(" ").strip
-  end
-
-  private def setup_new_user
-    self.role ||= :customer
   end
 end

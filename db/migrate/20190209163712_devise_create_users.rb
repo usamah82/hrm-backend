@@ -5,8 +5,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
     create_table :users do |t|
 
       ## General
-      t.string   "first_name",     null: false, default: ""
-      t.string   "last_name",      null: false, default: ""
+      t.string   "name",     null: false, default: ""
 
       ## Database authenticatable
       t.string :email,              null: false, default: ""
@@ -33,9 +32,9 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
       # t.string   :unconfirmed_email # Only if using reconfirmable
 
       ## Lockable
-      # t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
-      # t.string   :unlock_token # Only if unlock strategy is :email or :both
-      # t.datetime :locked_at
+      t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
+      t.string   :unlock_token # Only if unlock strategy is :email or :both
+      t.datetime :locked_at
 
       ## JTI for JWT auth
       t.string   "jti",                     null: false
@@ -47,7 +46,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.2]
     add_index :users, :email,                unique: true
     add_index :users, :reset_password_token, unique: true
     # add_index :users, :confirmation_token,   unique: true
-    # add_index :users, :unlock_token,         unique: true
+    add_index :users, :unlock_token,         unique: true
     add_index "users", ["jti"], name: "index_users_on_jti", unique: true, using: :btree
 
   end
