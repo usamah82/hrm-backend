@@ -8,8 +8,8 @@ RSpec.describe GraphqlSchema do
 
     # set query
     prepare_query("
-      mutation tokenLogin{
-        tokenLogin {
+      mutation tokenLoginUser {
+        tokenLoginUser {
           email
         }
       }
@@ -21,7 +21,7 @@ RSpec.describe GraphqlSchema do
   describe "login" do
     context "when no user exists" do
       it "is nil" do
-        expect(graphql!["data"]["tokenLogin"]).to eq(nil)
+        expect(graphql!["data"]["tokenLoginUser"]).to eq(nil)
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe GraphqlSchema do
       }
 
       it "returns user object" do
-        user_email = graphql!["data"]["tokenLogin"]["email"]
+        user_email = graphql!["data"]["tokenLoginUser"]["email"]
         expect(user_email).to eq(user.email)
       end
     end

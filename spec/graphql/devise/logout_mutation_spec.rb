@@ -8,8 +8,8 @@ RSpec.describe GraphqlSchema do
 
     # set query
     prepare_query("
-      mutation logout{
-        logout
+      mutation logoutUser{
+        logoutUser
       }
     ")
   }
@@ -19,12 +19,12 @@ RSpec.describe GraphqlSchema do
   describe "logout" do
     context "when no user exists" do
       it "is false" do
-        expect(graphql!["data"]["logout"]).to be false
+        expect(graphql!["data"]["logoutUser"]).to be false
       end
     end
 
 
-    context "when there\"s a matching user" do
+    context "when there's a matching user" do
 
       before {
         @current_user = create(:user, email: Faker::Internet.email, password: password, password_confirmation: password)

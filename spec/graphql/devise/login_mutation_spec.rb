@@ -8,8 +8,8 @@ RSpec.describe GraphqlSchema do
 
     # set query
     prepare_query("
-      mutation login($email: String!, $password: String!){
-        login(email: $email, password: $password) {
+      mutation loginUser($email: String!, $password: String!){
+        loginUser(email: $email, password: $password) {
           email
         }
       }
@@ -18,7 +18,7 @@ RSpec.describe GraphqlSchema do
 
   let(:password) { SecureRandom.uuid }
 
-  describe "login" do
+  describe "login_user" do
     context "when no user exists" do
       before {
         prepare_query_variables(
@@ -27,12 +27,12 @@ RSpec.describe GraphqlSchema do
         )
       }
       it "is nil" do
-        expect(graphql!["data"]["login"]).to eq(nil)
+        expect(graphql!["data"]["loginUser"]).to eq(nil)
       end
     end
 
 
-    context "when there\"s a matching user" do
+    context "when there's a matching user" do
       let(:user) { create(:user, email: Faker::Internet.email, password: password, password_confirmation: password) }
 
       before {
@@ -40,7 +40,7 @@ RSpec.describe GraphqlSchema do
       }
 
       it "returns user object" do
-        user_email = graphql!["data"]["login"]["email"]
+        user_email = graphql!["data"]["loginUser"]["email"]
         expect(user_email).to eq(user.email)
       end
     end

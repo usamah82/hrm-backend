@@ -8,10 +8,10 @@ RSpec.describe GraphqlSchema do
 
     # set query
     prepare_query("
-      mutation signUp(
+      mutation createUser(
         $email: String!, $password: String!, $passwordConfirmation: String!, $name: String!
       ){
-        signUp(
+        createUser(
           email: $email,
           password: $password,
           passwordConfirmation: $passwordConfirmation,
@@ -23,7 +23,7 @@ RSpec.describe GraphqlSchema do
     ")
   }
 
-  describe "signUp" do
+  describe "createUser" do
     let(:user) { build(:user) }
 
     before {
@@ -36,7 +36,7 @@ RSpec.describe GraphqlSchema do
     }
 
     it "returns user object" do
-      user_email = graphql!["data"]["signUp"]["email"]
+      user_email = graphql!["data"]["createUser"]["email"]
       expect(user_email).to eq(user.email)
     end
   end

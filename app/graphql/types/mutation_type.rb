@@ -2,14 +2,14 @@ module Types
   # MutationType
   class MutationType < Types::BaseObject
     ## LOGIN
-    field :login, UserType, null: true do
+    field :login_user, UserType, null: true do
       description "Login for users"
       argument :email, String, required: true
       argument :password, String, required: true
     end
 
     # Login
-    def login(email:, password:)
+    def login_user(email:, password:)
       user = User.find_for_authentication(email: email)
       return nil if !user
 
@@ -20,22 +20,22 @@ module Types
     end
 
     ## TOKEN-LOGIN
-    field :token_login, UserType, null: true do
+    field :token_login_user, UserType, null: true do
       description "JWT token login"
     end
 
     # Token login
-    def token_login
+    def token_login_user
       context[:current_user]
     end
 
     ## LOGOUT
-    field :logout, Boolean, null: true do
+    field :logout_user, Boolean, null: true do
       description "Logout for users"
     end
 
     # Logout
-    def logout
+    def logout_user
       if context[:current_user]
         context[:current_user].update(jti: SecureRandom.uuid)
         return true
@@ -63,8 +63,8 @@ module Types
       user
     end
 
-    field :sign_up, UserType, null: true do
-      description "Sign up for users"
+    field :create_user, UserType, null: true do
+      description "Create user"
       argument :email, String, required: true
       argument :password, String, required: true
       argument :passwordConfirmation, String, required: true
@@ -72,7 +72,7 @@ module Types
     end
 
     # Sign up
-    def sign_up(email:, password:, password_confirmation:, name:)
+    def create_user(email:, password:, password_confirmation:, name:)
       User.create(
         email: email,
         password: password,
@@ -108,12 +108,12 @@ module Types
     end
 
     # UNLOCK ACCOUNT
-    field :unlock, Boolean, null: false do
+    field :unlock_user, Boolean, null: false do
       argument :unlockToken, String, required: true
     end
 
     # Unlock
-    def unlock(unlock_token:)
+    def unlock_user(unlock_token:)
       user = User.unlock_access_by_token(unlock_token)
       user.id
     end
