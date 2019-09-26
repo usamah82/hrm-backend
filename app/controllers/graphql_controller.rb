@@ -8,7 +8,7 @@ class GraphqlController < ApplicationController
     context = {
       current_user: current_user
     }
-    result = GraphqlSchema.execute(
+    result = AppSchema.execute(
       query,
       variables: variables,
       context: context,

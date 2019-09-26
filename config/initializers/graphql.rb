@@ -1,4 +1,4 @@
-GraphQL::Errors.configure(GraphqlSchema) do
+GraphQL::Errors.configure(AppSchema) do
 	rescue_from ActiveRecord::RecordNotFound do |exception|
 		nil
 	end

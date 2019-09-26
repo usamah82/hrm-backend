@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe GraphqlSchema do
+RSpec.describe AppSchema do
   before {
     # reset vars and context
     prepare_query_variables({})

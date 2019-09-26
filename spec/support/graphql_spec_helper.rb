@@ -1,6 +1,6 @@
 module GraphqlSpecHelper
   def graphql!
-    GraphqlSchema.execute(
+    AppSchema.execute(
       @query,
       context: @context,
       variables: @variables
