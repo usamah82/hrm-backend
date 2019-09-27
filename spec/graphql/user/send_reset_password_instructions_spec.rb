@@ -8,8 +8,11 @@ RSpec.describe AppSchema do
 
     # set query
     prepare_query("
-      mutation sendResetPasswordInstructions($email: String!){
-        sendResetPasswordInstructions(email: $email)
+      mutation sendResetPasswordInstructions($input: SendResetPasswordInstructionsInput!){
+        sendResetPasswordInstructions(input: $input) {
+          resetPasswordInstructionsSent
+          errors
+        }
       }
     ")
   }
@@ -18,12 +21,17 @@ RSpec.describe AppSchema do
     context "when no user exists" do
       before {
         prepare_query_variables(
-          email: Faker::Internet.email,
+          input: {
+            email: Faker::Internet.email
+          }
         )
       }
 
       it "returns always true" do
-        expect(graphql!["data"]["sendResetPasswordInstructions"]).to be true
+        result = execute_graphql_query!
+        fields = result["data"]["sendResetPasswordInstructions"]
+
+        expect(fields["resetPasswordInstructionsSent"]).to be true
       end
     end
 
@@ -31,19 +39,24 @@ RSpec.describe AppSchema do
       before {
         @user = create(:user)
         prepare_query_variables(
-          email: @user.email,
+          input: {
+            email: @user.email,
+          }
         )
       }
 
       let(:user) { @user }
 
       it "returns true" do
-        expect(graphql!["data"]["sendResetPasswordInstructions"]).to be true
+        result = execute_graphql_query!
+        fields = result["data"]["sendResetPasswordInstructions"]
+
+        expect(fields["resetPasswordInstructionsSent"]).to be true
       end
 
       it "calls send_reset_password_instructions on user" do
         allow_any_instance_of(User).to receive(:send_reset_password_instructions)
-        graphql!
+        execute_graphql_query!
       end
     end
   end

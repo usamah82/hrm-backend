@@ -8,9 +8,10 @@ RSpec.describe AppSchema do
 
     # set query
     prepare_query("
-      mutation updateUser($password: String, $passwordConfirmation: String){
-        updateUser(password: $password, passwordConfirmation: $passwordConfirmation) {
-          email
+      mutation updateUser($input: UpdateUserInput! ){
+        updateUser(input: $input) {
+          user { email }
+          errors
         }
       }
     ")
@@ -22,12 +23,16 @@ RSpec.describe AppSchema do
     context "when no user exists" do
       before {
         prepare_query_variables(
-          password: password,
-          password_confirmation: password
+          input: {
+            password: password,
+            passwordConfirmation: password
+          }
         )
       }
-      it "is nil" do
-        expect(graphql!["data"]["updateUser"]).to eq(nil)
+      it "returns nil user" do
+        result = execute_graphql_query!
+        fields = result["data"]["updateUser"]
+        expect(fields["user"]).to eq(nil)
       end
     end
 
@@ -49,28 +54,38 @@ RSpec.describe AppSchema do
       context "when password matches confirmation" do
         before {
           prepare_query_variables(
-            password: password,
-            passwordConfirmation: password
+            input: {
+              password: password,
+              passwordConfirmation: password
+            }
           )
         }
 
         it "returns user object" do
-          user_email = graphql!["data"]["updateUser"]["email"]
+          result = execute_graphql_query!
+          fields = result["data"]["updateUser"]
+          user_email = fields["user"]["email"]
+
           expect(user_email).to eq(user.email)
         end
       end
 
 
-      context "when password does NOT match confirmation" do
+      context "when password does not match confirmation" do
         before {
           prepare_query_variables(
-            password: password,
-            passwordConfirmation: password + "1"
+            input: {
+              password: password,
+              passwordConfirmation: password + "1"
+            }
           )
         }
 
         it "returns error" do
-          expect(graphql!["errors"]).not_to eq nil
+          result = execute_graphql_query!
+          fields = result["data"]["updateUser"]
+
+          expect(fields["errors"]).not_to eq nil
         end
       end
     end

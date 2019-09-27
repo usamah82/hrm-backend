@@ -8,12 +8,15 @@ RSpec.describe AppSchema do
 
     # set query
     prepare_query("
-      mutation tokenLoginUser {
-        tokenLoginUser {
-          email
+      mutation tokenLoginUser($input: TokenLoginUserInput!) {
+        tokenLoginUser(input: $input) {
+          user { email }
+          errors
         }
       }
     ")
+
+    prepare_query_variables(input: {})
   }
 
   let(:password) { SecureRandom.uuid }
@@ -21,7 +24,10 @@ RSpec.describe AppSchema do
   describe "login" do
     context "when no user exists" do
       it "is nil" do
-        expect(graphql!["data"]["tokenLoginUser"]).to eq(nil)
+        result = execute_graphql_query!
+        fields = result["data"]["tokenLoginUser"]
+
+        expect(fields["user"]).to eq(nil)
       end
     end
 
@@ -37,7 +43,10 @@ RSpec.describe AppSchema do
       }
 
       it "returns user object" do
-        user_email = graphql!["data"]["tokenLoginUser"]["email"]
+        result = execute_graphql_query!
+        fields = result["data"]["tokenLoginUser"]
+        user_email = fields["user"]["email"]
+
         expect(user_email).to eq(user.email)
       end
     end

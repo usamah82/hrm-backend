@@ -1,10 +1,12 @@
 module GraphqlSpecHelper
-  def graphql!
-    AppSchema.execute(
+  def execute_graphql_query!
+    result = AppSchema.execute(
       @query,
       context: @context,
       variables: @variables
     )
+
+    result
   end
 
   def prepare_query_variables(variables)

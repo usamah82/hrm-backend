@@ -18,7 +18,7 @@ RSpec.describe AppSchema do
 
     context "when there's no current user" do
       it "is nil" do
-        expect(graphql!["data"]["me"]).to eq(nil)
+        expect(execute_graphql_query!["data"]["me"]).to eq(nil)
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe AppSchema do
       }
 
       it "shows the user's name" do
-        user_name = graphql!["data"]["me"]["name"]
+        user_name = execute_graphql_query!["data"]["me"]["name"]
         expect(user_name).to eq("John Doe")
       end
     end

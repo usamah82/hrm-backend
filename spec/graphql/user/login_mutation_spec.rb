@@ -8,9 +8,10 @@ RSpec.describe AppSchema do
 
     # set query
     prepare_query("
-      mutation loginUser($email: String!, $password: String!){
-        loginUser(email: $email, password: $password) {
-          email
+      mutation loginUser($input: LoginUserInput!){
+        loginUser(input: $input) {
+          user { email }
+          errors
         }
       }
     ")
@@ -22,12 +23,17 @@ RSpec.describe AppSchema do
     context "when no user exists" do
       before {
         prepare_query_variables(
-          email: Faker::Internet.email,
-          password: password
+          input: {
+            email: Faker::Internet.email,
+            password: password
+          }
         )
       }
       it "is nil" do
-        expect(graphql!["data"]["loginUser"]).to eq(nil)
+        result = execute_graphql_query!
+        fields = result["data"]["loginUser"]
+
+        expect(fields["user"]).to eq(nil)
       end
     end
 
@@ -36,11 +42,19 @@ RSpec.describe AppSchema do
       let(:user) { create(:user, email: Faker::Internet.email, password: password, password_confirmation: password) }
 
       before {
-        prepare_query_variables(email: user.email, password: password)
+        prepare_query_variables(
+          input: {
+            email: user.email,
+            password: password
+          }
+        )
       }
 
       it "returns user object" do
-        user_email = graphql!["data"]["loginUser"]["email"]
+        result = execute_graphql_query!
+        fields = result["data"]["loginUser"]
+        user_email = fields["user"]["email"]
+
         expect(user_email).to eq(user.email)
       end
     end

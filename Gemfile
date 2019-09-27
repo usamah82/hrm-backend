@@ -47,6 +47,7 @@ group :development, :test do
   gem "factory_bot_rails"                   # model mocks with factory bot
   gem "rubocop-rails"
   gem "rspec-rails", "~> 3.8"               # used testframework
+  gem "pry-rails"
 end
 
 
