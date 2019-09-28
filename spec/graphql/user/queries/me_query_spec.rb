@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AppSchema do
+RSpec.describe Queries::User do
   before {
     # reset vars and context
     prepare_query_variables({})

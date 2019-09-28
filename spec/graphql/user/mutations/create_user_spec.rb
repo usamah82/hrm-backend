@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AppSchema do
+RSpec.describe Mutations::User::CreateUser do
   before {
     # reset vars and context
     prepare_query_variables({})
@@ -17,7 +17,7 @@ RSpec.describe AppSchema do
     ")
   }
 
-  describe "createUser" do
+  describe "#resolve" do
     let(:user) { build(:user) }
 
     before {

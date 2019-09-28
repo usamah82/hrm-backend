@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AppSchema do
+RSpec.describe Mutations::User::UnlockUser do
   before {
     # reset vars and context
     prepare_query_variables({})
@@ -19,7 +19,7 @@ RSpec.describe AppSchema do
 
   let(:password) { SecureRandom.uuid }
 
-  describe "unlockUser" do
+  describe "#resolve" do
     context "when no user exists with that token" do
       before {
         prepare_query_variables(

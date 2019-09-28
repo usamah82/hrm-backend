@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AppSchema do
+RSpec.describe Mutations::User::SendResetPasswordInstructions do
   before {
     # reset vars and context
     prepare_query_variables({})
@@ -17,7 +17,7 @@ RSpec.describe AppSchema do
     ")
   }
 
-  describe "sendResetPasswordInstructions" do
+  describe "#resolve" do
     context "when no user exists" do
       before {
         prepare_query_variables(

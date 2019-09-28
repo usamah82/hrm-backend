@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AppSchema do
+RSpec.describe Mutations::User::TokenLoginUser do
   before {
     # reset vars and context
     prepare_query_variables({})
@@ -8,9 +8,9 @@ RSpec.describe AppSchema do
 
     # set query
     prepare_query("
-      mutation logoutUser($input: LogoutUserInput!) {
-        logoutUser(input: $input) {
-          userLoggedOut
+      mutation tokenLoginUser($input: TokenLoginUserInput!) {
+        tokenLoginUser(input: $input) {
+          user { email }
           errors
         }
       }
@@ -21,13 +21,13 @@ RSpec.describe AppSchema do
 
   let(:password) { SecureRandom.uuid }
 
-  describe "logout" do
+  describe "#resolve" do
     context "when no user exists" do
-      it "returns false" do
+      it "is nil" do
         result = execute_graphql_query!
-        fields = result["data"]["logoutUser"]
+        fields = result["data"]["tokenLoginUser"]
 
-        expect(fields["userLoggedOut"]).to be false
+        expect(fields["user"]).to eq(nil)
       end
     end
 
@@ -42,16 +42,12 @@ RSpec.describe AppSchema do
         @current_user
       }
 
-      it "returns true and resets the user's JTI" do
-        jti_before = user.jti
-
+      it "returns user object" do
         result = execute_graphql_query!
-        fields = result["data"]["logoutUser"]
+        fields = result["data"]["tokenLoginUser"]
+        user_email = fields["user"]["email"]
 
-        expect(fields["userLoggedOut"]).to be true
-
-        user.reload
-        expect(user.jti).not_to eq jti_before
+        expect(user_email).to eq(user.email)
       end
     end
   end
