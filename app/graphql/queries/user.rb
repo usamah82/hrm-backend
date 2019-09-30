@@ -9,7 +9,7 @@ module Queries
     end
 
     # Current user
-    def me(demo: false)
+    def me
       context[:current_user]
     end
   end

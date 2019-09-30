@@ -18,7 +18,9 @@ RSpec.describe Queries::User do
 
     context "when there's no current user" do
       it "is nil" do
-        expect(execute_graphql_query!["data"]["me"]).to eq(nil)
+        result = execute_graphql_query!
+        fields = result["data"]["me"]
+        expect(fields).to eq(nil)
       end
     end
 
@@ -30,7 +32,9 @@ RSpec.describe Queries::User do
       }
 
       it "shows the user's name" do
-        user_name = execute_graphql_query!["data"]["me"]["name"]
+        result = execute_graphql_query!
+        fields = result["data"]["me"]
+        user_name = fields["name"]
         expect(user_name).to eq("John Doe")
       end
     end
