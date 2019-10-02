@@ -13,6 +13,10 @@ module Services
 
           user
         end
+
+        def inputs_valid?
+          true
+        end
     end
   end
 end

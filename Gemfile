@@ -15,6 +15,7 @@ gem "bcrypt", "~> 3.1.7"                    # Use ActiveModel has_secure_passwor
 gem "graphql"
 gem "graphql-errors"
 gem "hashie"
+gem "pundit"
 gem "rack-cors"
 
 # Use Puma as the app server

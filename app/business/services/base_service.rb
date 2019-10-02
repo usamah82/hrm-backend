@@ -6,6 +6,21 @@ module Services
   #
   # However it does expose various hooks for validation and result
   # rendering, to be overriden by the deriving service objects.
+  #
+  # As per best practice, service object should be secured and flawless
+  # by default - hence any service object implementation must implement
+  #
+  # - authorization
+  # - validation
+  # - actual processing
+  #
+  # Having all these concerns built into the service object ensures
+  # proper consolidation and good reusability, which is important as
+  # service objects are the only ways of interacting with the application
+  # state.
+  #
+  # If those concerns are not applicable, the default hooks can be overridden
+  # to become permissive instead of restrictive e.g '#inputs_valid?' always returns true
   class BaseService
     # Main entrypoint to the service object
     def self.call(**args)
@@ -18,10 +33,9 @@ module Services
     end
 
     # The actual instance method that's invoked. There's hooks for
-    # validation and data / errors rendering, however by default
-    # they do not have to be implemented unless necessary.
+    # authorization, validation and data / errors rendering.
     #
-    # This method returns a hash with the following keys:
+    # This method returns a {Hashie::Mash} with the following keys:
     # - :data, which can be anything
     # - :errors, which ideally should be an {Array}
     #
@@ -29,6 +43,7 @@ module Services
     #
     # @return [Hashie::Mash] A {Hashie::Mash} consisting of keys :data and :errors
     def call
+      authorize!
       if inputs_valid?
         @data = process
       end
@@ -42,12 +57,25 @@ module Services
       #
       # @return Ideally the output (data) from the processing
       def process
-        raise NotImplementedError("#process instance method must be implemented")
+        raise NotImplementedError("The instance method '#process' must be implemented for the service object")
       end
+
+      # Hook for authorization
+      #
+      # By default it looks for corresponding policy given the service object class
+      #
+      # For example, if the service object is Services::User::CreateUser, it will check for
+      # Policies::User#create_user?
+      #
+      # If the policy is not available, an exception is raised.
+      def authorize!
+        DefaultServiceAuthorizer.authorize?(Current.user, self.class)
+      end
+
 
       # Hook for validation
       def inputs_valid?
-        true
+        false
       end
 
       # Hook to render data
