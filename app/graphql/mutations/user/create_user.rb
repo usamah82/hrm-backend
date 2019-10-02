@@ -15,15 +15,9 @@ module Mutations
       field :errors, [String], null: false
 
       # CreateUser mutation resolver
-      def resolve(email:, name:, password:, password_confirmation:)
-        user = ::User.create(
-          email: email,
-          password: password,
-          password_confirmation: password_confirmation,
-          name: name
-        )
-
-        { user: user, errors: user.errors.full_messages }
+      def resolve(**args)
+        result = Services::User::CreateUser.call(args)
+        { user: result.data, errors: result.errors }
       end
     end
   end
