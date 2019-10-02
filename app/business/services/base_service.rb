@@ -69,7 +69,7 @@ module Services
       #
       # If the policy is not available, an exception is raised.
       def authorize!
-        DefaultServiceAuthorizer.authorize?(Current.user, self.class)
+        DefaultServiceAuthorizer.authorized?(Current.user, self.class)
       end
 
 

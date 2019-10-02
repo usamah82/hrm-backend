@@ -11,16 +11,15 @@ module Services
     #
     # Else, the policy class is instantiated with the user and authorization is performed
     # against the intended action.
-    def self.authorize?(user, service_object_class)
+    def self.authorized?(user, service_object_class)
       action = action_to_authorize(service_object_class)
       domain = service_object_class.name.deconstantize.demodulize
       policy_class = domain_policy_class(domain)
 
-      raise Pundit::NotAuthorizedError(
+      raise Pundit::NotAuthorizedError,
         "Missing authorization policy. "\
-        "Expected #{policy_class.name}##{action.to_s} to be implemented, "\
-        "else override the #authorize! hook"
-      ) unless policy_class
+        "Expected Policies::#{domain}Policy##{action.to_s} to be implemented, "\
+        "else override the #authorize! hook" unless policy_class
 
       policy = policy_class.new(user, domain)
       policy.public_send(action)
