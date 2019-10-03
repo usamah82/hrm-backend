@@ -4,7 +4,11 @@ module Policies
     attr_reader :user, :record
 
     # Initializes the policy with user and record to authorize against
-    def initialize(user, record)
+    #
+    # Both the user and record arguments are optional, since there can be policies
+    # - not requiring any current user (e.g true / false by default)
+    # - not having an existing resource to authorize against e.g to create a new user
+    def initialize(user = nil, record = nil)
       @user = user
       @record = record
     end
@@ -14,7 +18,7 @@ module Policies
       attr_reader :user, :scope
 
       # Initializes the scope with user and the current scope / list of domain models
-      def initialize(user, scope)
+      def initialize(user = nil, scope)
         @user = user
         @scope = scope
       end
