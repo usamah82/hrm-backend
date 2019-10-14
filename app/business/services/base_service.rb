@@ -69,7 +69,16 @@ module Services
       #
       # If the policy is not available, an exception is raised.
       def authorize!
-        DefaultServiceAuthorizer.authorized?(Current.user, self.class)
+        domain_policy_class, domain_action = DefaultServicePolicy.authorization_components(self.class)
+
+        raise Pundit::NotAuthorizedError,
+          "Missing authorization policy. "\
+          "Expected #{domain_policy_class} to be implemented, "\
+          "else override the #authorize! hook" unless domain_policy_class.is_a? Class
+
+        # TODO - figure out scoping of resources / records. Currently we pass a symbol of the action
+        policy = domain_policy_class.new(Current.user, domain_action)
+        policy.public_send(domain_action)
       end
 
 
