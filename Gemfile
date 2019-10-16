@@ -48,7 +48,7 @@ group :development, :test do
   gem "awesome_print"                       # better console ouput for objects -> ap object.inspect
   gem "factory_bot_rails"                   # model mocks with factory bot
   gem "rubocop-rails"
-  gem "rspec-rails", "~> 3.8"               # used testframework
+  gem "rspec-rails", "~> 3.9"               # used testframework
   gem "pry-rails"
 end
 
