@@ -32,4 +32,12 @@ RSpec.describe Services::DomainHelper do
       end
     end
   end
+
+  describe ".to_service_object_class_name" do
+    it "returns the service object class name without domain namespace" do
+      expect(
+        described_class.to_service_object_class_name(Services::Dummy::DoSomething)
+        ).to eq "DoSomething"
+    end
+  end
 end
