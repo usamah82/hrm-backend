@@ -84,7 +84,15 @@ module Services
 
       # Hook for validation
       def inputs_valid?
-        false
+        form_object_class = DefaultServiceInput.form_object_class(self.class)
+
+        raise NotImplementedError,
+          "Missing service form object implementation. "\
+          "Expected #{form_object_class} to be implemented, "\
+          "else override the #authorize! hook" unless form_object_class.is_a? Class
+
+        @form_object = form_object_class.new(@args)
+        @form_object.valid?
       end
 
       # Hook to render data
