@@ -43,8 +43,7 @@ module Services
     #
     # @return [Hashie::Mash] A {Hashie::Mash} consisting of keys :data and :errors
     def call
-      authorize!
-      if inputs_valid?
+      if authorized? && inputs_valid?
         @data = process
       end
 
@@ -68,13 +67,13 @@ module Services
       # Policies::User#create_user?
       #
       # If the policy is not available, an exception is raised.
-      def authorize!
+      def authorized?
         domain_policy_class, domain_action = DefaultServicePolicy.authorization_components(self.class)
 
         raise Pundit::NotAuthorizedError,
           "Missing authorization policy. "\
           "Expected #{domain_policy_class} to be implemented, "\
-          "else override the #authorize! hook" unless domain_policy_class.is_a? Class
+          "else override the #authorized? hook" unless domain_policy_class.is_a? Class
 
         # TODO - figure out scoping of resources / records. Currently we pass a symbol of the action
         policy = domain_policy_class.new(Current.user, domain_action)
@@ -84,12 +83,12 @@ module Services
 
       # Hook for validation
       def inputs_valid?
-        form_object_class = DefaultServiceInput.form_object_class(self.class)
+        form_object_class = DefaultServiceFormObject.form_object_class(self.class)
 
         raise NotImplementedError,
           "Missing service form object implementation. "\
           "Expected #{form_object_class} to be implemented, "\
-          "else override the #authorize! hook" unless form_object_class.is_a? Class
+          "else override the #inputs_valid? hook" unless form_object_class.is_a? Class
 
         @form_object = form_object_class.new(@args)
         @form_object.valid?

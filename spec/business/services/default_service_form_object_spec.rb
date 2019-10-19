@@ -10,14 +10,14 @@ RSpec.describe Services::DefaultServiceFormObject do
 
   module Services
     module Dummy
-      class DoSomething
+      class DoSomething < Services::BaseService
       end
     end
   end
 
   module Services
     module AnotherDummy
-      class DoSomething
+      class DoSomething < Services::BaseService
       end
     end
   end

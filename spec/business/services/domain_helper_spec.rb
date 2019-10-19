@@ -11,7 +11,7 @@ RSpec.describe Services::DomainHelper do
   module Services
     module Dummy
       module SubDummy
-        class DoSomething
+        class DoSomething < Services::BaseService
         end
       end
     end

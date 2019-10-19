@@ -57,7 +57,7 @@ RSpec.describe GraphqlController, type: :controller do
       it "should raise argument error" do
         expect {
           post :execute, params: { "query" => "{ me { email } }", "variables" => 12 }
-        }.to raise_error
+        }.to raise_error(ArgumentError)
       end
 
       context "environment is development" do
