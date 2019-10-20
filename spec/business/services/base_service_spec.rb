@@ -4,6 +4,11 @@ RSpec.describe Services::BaseService do
   module FormObjects
     module Dummy
       class DoSomething < FormObjects::BaseFormObject
+        attr_accessor :dummy_input, :yet_another_dummy_input
+
+        def initialize(dummy_input:, yet_another_dummy_input:)
+        end
+
         def valid?
           true
         end
@@ -60,7 +65,9 @@ RSpec.describe Services::BaseService do
 
   describe "authorization" do
     it "attempts to authorize by default" do
-      result = Services::Dummy::DoSomething.call
+      result = Services::Dummy::DoSomething.call(
+        dummy_input: :bla, yet_another_dummy_input: :blabla
+      )
       expect(result.data.authorization_value).to eq true
     end
 
@@ -74,8 +81,17 @@ RSpec.describe Services::BaseService do
   end
 
   describe "validation" do
+    it "enforces the keyword arguments based on the form object" do
+      expect do
+        # No arguments supplied
+        Services::Dummy::DoSomething.call
+      end.to raise_error(ArgumentError)
+    end
+
     it "attempts to validate form object by default" do
-      result = Services::Dummy::DoSomething.call
+      result = Services::Dummy::DoSomething.call(
+        dummy_input: :bla, yet_another_dummy_input: :blabla
+      )
       expect(result.data.validation_value).to eq true
     end
 
