@@ -35,13 +35,13 @@ module Services
     # The actual instance method that's invoked. There's hooks for
     # authorization, validation and data / errors rendering.
     #
-    # This method returns a {Hashie::Mash} with the following keys:
+    # This method returns a {::Hashie::Mash} with the following keys:
     # - :data, which can be anything
-    # - :errors, which ideally should be an {Array}
+    # - :errors, which ideally should be an {::Array}
     #
     # It is up to the implementer to supply the values for :data and :errors.
     #
-    # @return [Hashie::Mash] A {Hashie::Mash} consisting of keys :data and :errors
+    # @return [Hashie::Mash] A {::Hashie::Mash} consisting of keys :data and :errors
     def call
       if authorized? && inputs_valid?
         @data = process
