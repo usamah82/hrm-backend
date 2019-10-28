@@ -95,13 +95,17 @@ module Services
       end
 
       # Hook to render data
+      #
+      # By default it renders the outcome of the `process` method
       def render_data
         @data
       end
 
       # Hook to render errors
+      #
+      # By default it renders the errors of the `@form_object`
       def render_errors
-        []
+        @form_object.errors
       end
   end
 end

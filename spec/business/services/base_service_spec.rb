@@ -30,6 +30,7 @@ RSpec.describe Services::BaseService do
         private
           def process
             {
+              process_value: 42,
               authorization_value: authorized?,
               validation_value: inputs_valid?,
             }
@@ -101,6 +102,22 @@ RSpec.describe Services::BaseService do
           Services::Dummy::DoSomethingWithoutFormObject.call
         end.to raise_error(NotImplementedError)
       end
+    end
+  end
+
+  describe "output" do
+    subject do
+      Services::Dummy::DoSomething.call(
+        dummy_input: :bla, yet_another_dummy_input: :blabla
+      )
+    end
+
+    it "returns a hash containing keys 'data' and 'errors'" do
+      expect(subject.keys).to match_array(["data", "errors"])
+    end
+
+    it "returns the errors being contained in ActiveModel::Errors instance" do
+      expect(subject.errors).to be_instance_of(ActiveModel::Errors)
     end
   end
 end

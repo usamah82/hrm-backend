@@ -5,17 +5,13 @@ module Services
       private
         def process
           user = ::User.create(
-            email: @args[:email],
-            password: @args[:password],
-            password_confirmation: @args[:password_confirmation],
-            name: @args[:name]
+            email: @form_object.email,
+            password: @form_object.password,
+            password_confirmation: @form_object.password_confirmation,
+            name: @form_object.name
           )
 
           user
-        end
-
-        def inputs_valid?
-          true
         end
     end
   end
