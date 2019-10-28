@@ -8,5 +8,11 @@ module Services
       first, *domain_namespace = service_object_class.name.deconstantize.split("::")
       domain_namespace.join("::")
     end
+
+    # Extracts service object class name only, without the domain details
+    # e.g Services::Domain::Subdomain::CreateSomething becomes CreateSomething
+    def self.to_service_object_class_name(service_object_class)
+      service_object_class.name.demodulize
+    end
   end
 end

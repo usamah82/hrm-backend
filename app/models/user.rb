@@ -44,7 +44,7 @@ class User < ApplicationRecord
   # - VALIDATIONS
   validates :email, presence: true
   validates :email, length: { maximum: 255 }
-  validates :email, format: { with: Regex::Email::VALIDATE }
+  validates :email, format: { with: Devise.email_regexp }
   validates :name, presence: true
   validates :name, length: { maximum: 255 }
 

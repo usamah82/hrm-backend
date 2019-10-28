@@ -11,7 +11,7 @@ RSpec.describe Services::DomainHelper do
   module Services
     module Dummy
       module SubDummy
-        class DoSomething
+        class DoSomething < Services::BaseService
         end
       end
     end
@@ -30,6 +30,14 @@ RSpec.describe Services::DomainHelper do
           described_class.to_domain_namespace(Services::Dummy::SubDummy::DoSomething)
           ).to eq "Dummy::SubDummy"
       end
+    end
+  end
+
+  describe ".to_service_object_class_name" do
+    it "returns the service object class name without domain namespace" do
+      expect(
+        described_class.to_service_object_class_name(Services::Dummy::DoSomething)
+        ).to eq "DoSomething"
     end
   end
 end

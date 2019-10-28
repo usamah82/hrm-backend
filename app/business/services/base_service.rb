@@ -23,11 +23,17 @@ module Services
   # to become permissive instead of restrictive e.g '#inputs_valid?' always returns true
   class BaseService
     # Main entrypoint to the service object
+    #
+    # @param args [Hash] list of named arguments to be consumed by the service
+    #
+    # Refer to {#call}
     def self.call(**args)
       new(args).call
     end
 
     # Initializes the service object
+    #
+    # @param (see {call})
     def initialize(**args)
       @args = args
     end
@@ -35,16 +41,15 @@ module Services
     # The actual instance method that's invoked. There's hooks for
     # authorization, validation and data / errors rendering.
     #
-    # This method returns a {Hashie::Mash} with the following keys:
+    # This method returns a {::Hashie::Mash} with the following keys:
     # - :data, which can be anything
-    # - :errors, which ideally should be an {Array}
+    # - :errors, which ideally should be an {::Array}
     #
     # It is up to the implementer to supply the values for :data and :errors.
     #
-    # @return [Hashie::Mash] A {Hashie::Mash} consisting of keys :data and :errors
+    # @return [Hashie::Mash] A {::Hashie::Mash} consisting of keys :data and :errors
     def call
-      authorize!
-      if inputs_valid?
+      if authorized? && inputs_valid?
         @data = process
       end
 
@@ -55,7 +60,7 @@ module Services
       # The heavy lifting is done within this method. All service objects must at the very
       # minimum implement this method
       #
-      # @return Ideally the output (data) from the processing
+      # @return [Object] Ideally the output (data) from the processing
       def process
         raise NotImplementedError("The instance method '#process' must be implemented for the service object")
       end
@@ -68,13 +73,15 @@ module Services
       # Policies::User#create_user?
       #
       # If the policy is not available, an exception is raised.
-      def authorize!
+      #
+      # @return [Boolean] True if current user is authorized
+      def authorized?
         domain_policy_class, domain_action = DefaultServicePolicy.authorization_components(self.class)
 
         raise Pundit::NotAuthorizedError,
           "Missing authorization policy. "\
           "Expected #{domain_policy_class} to be implemented, "\
-          "else override the #authorize! hook" unless domain_policy_class.is_a? Class
+          "else override the #authorized? hook" unless domain_policy_class.is_a? Class
 
         # TODO - figure out scoping of resources / records. Currently we pass a symbol of the action
         policy = domain_policy_class.new(Current.user, domain_action)
@@ -83,18 +90,39 @@ module Services
 
 
       # Hook for validation
+      #
+      # By default the inputs to the service are instantiated into a form object, which then
+      # validates the inputs.
+      #
+      # @return [Boolean] True if the inputs, by default contained in a form object, are valid
       def inputs_valid?
-        false
+        form_object_class = DefaultServiceFormObject.form_object_class(self.class)
+
+        raise NotImplementedError,
+          "Missing service form object implementation. "\
+          "Expected #{form_object_class} to be implemented, "\
+          "else override the #inputs_valid? hook" unless form_object_class.is_a? Class
+
+        @form_object = form_object_class.new(@args)
+        @form_object.valid?
       end
 
       # Hook to render data
+      #
+      # By default it renders the outcome of the {#process} method
+      #
+      # @return [Object] The outcome of the {#process} method
       def render_data
         @data
       end
 
       # Hook to render errors
+      #
+      # By default it renders the errors of the form object
+      #
+      # @return [ActiveRecord::Errors]
       def render_errors
-        []
+        @form_object.errors
       end
   end
 end
