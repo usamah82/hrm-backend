@@ -23,11 +23,17 @@ module Services
   # to become permissive instead of restrictive e.g '#inputs_valid?' always returns true
   class BaseService
     # Main entrypoint to the service object
+    #
+    # @param args [Hash] list of named arguments to be consumed by the service
+    #
+    # Refer to {#call}
     def self.call(**args)
       new(args).call
     end
 
     # Initializes the service object
+    #
+    # @param (see {call})
     def initialize(**args)
       @args = args
     end
@@ -54,7 +60,7 @@ module Services
       # The heavy lifting is done within this method. All service objects must at the very
       # minimum implement this method
       #
-      # @return Ideally the output (data) from the processing
+      # @return [Object] Ideally the output (data) from the processing
       def process
         raise NotImplementedError("The instance method '#process' must be implemented for the service object")
       end
@@ -67,6 +73,8 @@ module Services
       # Policies::User#create_user?
       #
       # If the policy is not available, an exception is raised.
+      #
+      # @return [Boolean] True if current user is authorized
       def authorized?
         domain_policy_class, domain_action = DefaultServicePolicy.authorization_components(self.class)
 
@@ -82,6 +90,11 @@ module Services
 
 
       # Hook for validation
+      #
+      # By default the inputs to the service are instantiated into a form object, which then
+      # validates the inputs.
+      #
+      # @return [Boolean] True if the inputs, by default contained in a form object, are valid
       def inputs_valid?
         form_object_class = DefaultServiceFormObject.form_object_class(self.class)
 
@@ -96,14 +109,18 @@ module Services
 
       # Hook to render data
       #
-      # By default it renders the outcome of the `process` method
+      # By default it renders the outcome of the {#process} method
+      #
+      # @return [Object] The outcome of the {#process} method
       def render_data
         @data
       end
 
       # Hook to render errors
       #
-      # By default it renders the errors of the `@form_object`
+      # By default it renders the errors of the form object
+      #
+      # @return [ActiveRecord::Errors]
       def render_errors
         @form_object.errors
       end

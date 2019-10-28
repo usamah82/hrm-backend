@@ -5,10 +5,8 @@ module FormObjects
       attr_accessor :email, :name, :password, :password_confirmation
 
       validates :email, presence: true
-      validates :email, length: { maximum: 255 }
       validates :email, format: { with: Devise.email_regexp }
       validates :name, presence: true
-      validates :name, length: { maximum: 255 }
       validates :password, presence: true
       validates :password_confirmation, presence: true
 
