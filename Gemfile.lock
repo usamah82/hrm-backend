@@ -90,7 +90,7 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
-    faker (2.6.0)
+    faker (2.7.0)
       i18n (>= 1.6, < 1.8)
     ffi (1.11.1)
     globalid (0.4.2)
@@ -261,7 +261,7 @@ DEPENDENCIES
   devise-jwt (~> 0.6.0)
   dotenv-rails
   factory_bot_rails
-  faker (~> 2.6)
+  faker (~> 2.7)
   graphql
   graphql-errors
   graphql_playground-rails
