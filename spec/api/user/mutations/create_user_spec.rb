@@ -11,7 +11,10 @@ RSpec.describe Mutations::User::CreateUser do
       mutation createUser($input: CreateUserInput!){
         createUser(input: $input){
           user { email }
-          errors
+          errors {
+            path
+            message
+          }
         }
       }
     ")

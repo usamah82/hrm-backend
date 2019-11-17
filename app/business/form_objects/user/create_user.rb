@@ -12,14 +12,6 @@ module FormObjects
 
       validate :matching_password_confirmation
 
-      # Form initialization
-      def initialize(email:, name:, password:, password_confirmation:)
-        @email = email
-        @name = name
-        @password = password
-        @password_confirmation = password_confirmation
-      end
-
       private
         def matching_password_confirmation
           if password != password_confirmation
