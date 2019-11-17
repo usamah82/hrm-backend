@@ -12,12 +12,12 @@ module Mutations
       argument :password_confirmation, String, required: true
 
       field :user, Types::User, null: true
-      field :errors, [String], null: false
+      field :errors, [Types::MutationError], null: false
 
       # CreateUser mutation resolver
       def resolve(**args)
         result = Services::User::CreateUser.call(args)
-        { user: result.data, errors: result.errors }
+        render_fields(user: result.data, errors: result.errors)
       end
     end
   end
