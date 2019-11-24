@@ -1,37 +1,37 @@
-module Services
-  # Base class for service object implementations.
-  # It basically ensures that each service object adheres to
+module Operations
+  # Base class for operation implementations.
+  # It basically ensures that each operation adheres to
   # SRP - Single Responsibility Principle, by only exposing a single
-  # '.call' method to invoke the service object.
+  # '.call' method to invoke the operation.
   #
   # However it does expose various hooks for validation and result
-  # rendering, to be overriden by the deriving service objects.
+  # rendering, to be overriden by the deriving operations.
   #
-  # As per best practice, service object should be secured and flawless
-  # by default - hence any service object implementation must implement
+  # As per best practice, operation should be secured and flawless
+  # by default - hence any operation implementation must implement
   #
   # - authorization
   # - validation
   # - actual processing
   #
-  # Having all these concerns built into the service object ensures
+  # Having all these concerns built into the operation ensures
   # proper consolidation and good reusability, which is important as
-  # service objects are the only ways of interacting with the application
+  # operations are the only ways of interacting with the application
   # state.
   #
   # If those concerns are not applicable, the default hooks can be overridden
   # to become permissive instead of restrictive e.g '#inputs_valid?' always returns true
-  class BaseService
-    # Main entrypoint to the service object
+  class BaseOperation
+    # Main entrypoint to the operation
     #
-    # @param args [Hash] list of named arguments to be consumed by the service
+    # @param args [Hash] list of named arguments to be consumed by the operation
     #
     # Refer to {#call}
     def self.call(**args)
       new(args).call
     end
 
-    # Initializes the service object
+    # Initializes the operation
     #
     # @param (see {call})
     def initialize(**args)
@@ -57,26 +57,26 @@ module Services
     end
 
     private
-      # The heavy lifting is done within this method. All service objects must at the very
+      # The heavy lifting is done within this method. All operations must at the very
       # minimum implement this method
       #
       # @return [Object] Ideally the output (data) from the processing
       def process
-        raise NotImplementedError("The instance method '#process' must be implemented for the service object")
+        raise NotImplementedError("The instance method '#process' must be implemented for the operation")
       end
 
       # Hook for authorization
       #
-      # By default it looks for corresponding policy given the service object class
+      # By default it looks for corresponding policy given the operation class
       #
-      # For example, if the service object is Services::User::CreateUser, it will check for
+      # For example, if the operation is Operations::User::CreateUser, it will check for
       # Policies::User#create_user?
       #
       # If the policy is not available, an exception is raised.
       #
       # @return [Boolean] True if current user is authorized
       def authorized?
-        domain_policy_class, domain_action = DefaultServicePolicy.authorization_components(self.class)
+        domain_policy_class, domain_operation = DefaultOperationPolicy.authorization_components(self.class)
 
         raise Pundit::NotAuthorizedError,
           "Missing authorization policy. "\
@@ -84,27 +84,27 @@ module Services
           "else override the #authorized? hook" unless domain_policy_class.is_a? Class
 
         # TODO - figure out scoping of resources / records. Currently we pass a symbol of the action
-        policy = domain_policy_class.new(Current.user, domain_action)
-        policy.public_send(domain_action)
+        @policy = domain_policy_class.new(Current.user, domain_operation)
+        @policy.public_send(domain_operation)
       end
 
 
       # Hook for validation
       #
-      # By default the inputs to the service are instantiated into a form object, which then
+      # By default the inputs to the operation are instantiated into an input object, which then
       # validates the inputs.
       #
-      # @return [Boolean] True if the inputs, by default contained in a form object, are valid
+      # @return [Boolean] True if the inputs, by default contained in an input object, are valid
       def inputs_valid?
-        form_object_class = DefaultServiceFormObject.form_object_class(self.class)
+        input_class = DefaultOperationInput.input_class(self.class)
 
         raise NotImplementedError,
-          "Missing service form object implementation. "\
-          "Expected #{form_object_class} to be implemented, "\
-          "else override the #inputs_valid? hook" unless form_object_class.is_a? Class
+          "Missing operation input implementation. "\
+          "Expected #{input_class} to be implemented, "\
+          "else override the #inputs_valid? hook" unless input_class.is_a? Class
 
-        @form_object = form_object_class.new(@args)
-        @form_object.valid?
+        @input = input_class.new(@args)
+        @input.valid?
       end
 
       # Hook to render data
@@ -118,11 +118,11 @@ module Services
 
       # Hook to render errors
       #
-      # By default it renders the errors of the form object
+      # By default it renders the errors of input object
       #
       # @return [ActiveRecord::Errors]
       def render_errors
-        @form_object.errors
+        @input.errors
       end
   end
 end

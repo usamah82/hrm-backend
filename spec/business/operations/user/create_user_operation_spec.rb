@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Services::User::CreateUser do
+describe Operations::User::CreateUserOperation do
   it "creates a new user" do
     args = {
       email: Faker::Internet.email,

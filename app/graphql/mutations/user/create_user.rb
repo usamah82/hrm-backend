@@ -16,7 +16,7 @@ module Mutations
 
       # CreateUser mutation resolver
       def resolve(**args)
-        result = Services::User::CreateUser.call(args)
+        result = Operations::User::CreateUserOperation.call(args)
         render_fields(user: result.data, errors: result.errors)
       end
     end
