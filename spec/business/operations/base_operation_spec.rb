@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.describe Services::BaseService do
-  module FormObjects
+RSpec.describe Operations::BaseOperation do
+  module Inputs
     module Dummy
-      class DoSomething < FormObjects::BaseFormObject
+      class DoSomethingInput < Inputs::BaseInput
         attr_accessor :dummy_input, :yet_another_dummy_input
 
         def initialize(dummy_input:, yet_another_dummy_input:)
@@ -24,9 +24,9 @@ RSpec.describe Services::BaseService do
     end
   end
 
-  module Services
+  module Operations
     module Dummy
-      class DoSomething < Services::BaseService
+      class DoSomethingOperation < Operations::BaseOperation
         private
           def process
             {
@@ -39,9 +39,9 @@ RSpec.describe Services::BaseService do
     end
   end
 
-  module Services
+  module Operations
     module DummyWithoutAuthPolicy
-      class DoSomething < Services::BaseService
+      class DoSomethingOperation < Operations::BaseOperation
         private
           def process
           end
@@ -49,9 +49,9 @@ RSpec.describe Services::BaseService do
     end
   end
 
-  module Services
+  module Operations
     module Dummy
-      class DoSomethingWithoutFormObject < Services::BaseService
+      class DoSomethingWithoutInputOperation < Operations::BaseOperation
         private
           def process
           end
@@ -66,7 +66,7 @@ RSpec.describe Services::BaseService do
 
   describe "authorization" do
     it "attempts to authorize by default" do
-      result = Services::Dummy::DoSomething.call(
+      result = Operations::Dummy::DoSomethingOperation.call(
         dummy_input: :bla, yet_another_dummy_input: :blabla
       )
       expect(result.data.authorization_value).to eq true
@@ -75,31 +75,31 @@ RSpec.describe Services::BaseService do
     context "no authorization policy" do
       it "raises exception" do
         expect do
-          Services::DummyWithoutAuthPolicy::DoSomething.call
+          Operations::DummyWithoutAuthPolicy::DoSomethingOperation.call
         end.to raise_error(Pundit::NotAuthorizedError)
       end
     end
   end
 
   describe "validation" do
-    it "enforces the keyword arguments based on the form object" do
+    it "enforces the keyword arguments based on the input" do
       expect do
         # No arguments supplied
-        Services::Dummy::DoSomething.call
+        Operations::Dummy::DoSomethingOperation.call
       end.to raise_error(ArgumentError)
     end
 
-    it "attempts to validate form object by default" do
-      result = Services::Dummy::DoSomething.call(
+    it "attempts to validate input by default" do
+      result = Operations::Dummy::DoSomethingOperation.call(
         dummy_input: :bla, yet_another_dummy_input: :blabla
       )
       expect(result.data.validation_value).to eq true
     end
 
-    context "no form object" do
+    context "no input" do
       it "raises exception" do
         expect do
-          Services::Dummy::DoSomethingWithoutFormObject.call
+          Operations::Dummy::DoSomethingWithoutInputOperation.call
         end.to raise_error(NotImplementedError)
       end
     end
@@ -107,7 +107,7 @@ RSpec.describe Services::BaseService do
 
   describe "output" do
     subject do
-      Services::Dummy::DoSomething.call(
+      Operations::Dummy::DoSomethingOperation.call(
         dummy_input: :bla, yet_another_dummy_input: :blabla
       )
     end

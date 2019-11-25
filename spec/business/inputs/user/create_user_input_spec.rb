@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe FormObjects::User::CreateUser do
+describe Inputs::User::CreateUserInput do
   describe "password_confirmation" do
     context "matches password" do
       it "is valid" do
