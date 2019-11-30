@@ -9,5 +9,7 @@
 #  updated_at   :datetime         not null
 #
 
+# Company model
 class Company < ApplicationRecord
+  has_many :employees
 end
