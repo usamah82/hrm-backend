@@ -39,7 +39,7 @@ class User < ApplicationRecord
          jwt_revocation_strategy: self
 
   # - RELATIONS
-  # -
+  has_one :employee
 
   # - VALIDATIONS
   validates :email, presence: true
