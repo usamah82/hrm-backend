@@ -4,6 +4,6 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :country_code, String, null: true
-    field :employees, Types::Employee.connnection_type, null: false
+    field :employees, Types::Employee.connection_type, null: false
   end
 end

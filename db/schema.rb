@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(version: 2019_09_30_035733) do
   end
 
   create_table "employees", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "company_id", null: false
-    t.bigint "user_id", null: false
+    t.uuid "company_id", null: false
+    t.uuid "user_id", null: false
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2019_09_30_035733) do
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
