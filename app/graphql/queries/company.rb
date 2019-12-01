@@ -3,14 +3,14 @@ module Queries
   module Company
     # Inclusion of domain queries
     def self.included(child_class)
-      child_class.field :company, Types::Company, null: true do
+      child_class.field :company, Types::Company, null: false do
         description "Returns the company for the current user"
       end
     end
 
     # Current company
     def company
-      # TODO - get from context? Preload at controller?
+      context[:current_user].employee.company
     end
   end
 end
