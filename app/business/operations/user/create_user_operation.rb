@@ -4,7 +4,7 @@ module Operations
     class CreateUserOperation < Operations::BaseOperation
       private
         def process
-          user = ::User.create(
+          user = ::User.create!(
             email: @input.email,
             password: @input.password,
             password_confirmation: @input.password_confirmation,

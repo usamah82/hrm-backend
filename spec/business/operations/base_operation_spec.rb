@@ -66,7 +66,7 @@ RSpec.describe Operations::BaseOperation do
 
   describe "authorization" do
     it "attempts to authorize by default" do
-      result = Operations::Dummy::DoSomethingOperation.call(
+      result = Operations::Dummy::DoSomethingOperation.(
         dummy_input: :bla, yet_another_dummy_input: :blabla
       )
       expect(result.data.authorization_value).to eq true
@@ -75,7 +75,7 @@ RSpec.describe Operations::BaseOperation do
     context "no authorization policy" do
       it "raises exception" do
         expect do
-          Operations::DummyWithoutAuthPolicy::DoSomethingOperation.call
+          Operations::DummyWithoutAuthPolicy::DoSomethingOperation.()
         end.to raise_error(Pundit::NotAuthorizedError)
       end
     end
@@ -85,12 +85,12 @@ RSpec.describe Operations::BaseOperation do
     it "enforces the keyword arguments based on the input" do
       expect do
         # No arguments supplied
-        Operations::Dummy::DoSomethingOperation.call
+        Operations::Dummy::DoSomethingOperation.()
       end.to raise_error(ArgumentError)
     end
 
     it "attempts to validate input by default" do
-      result = Operations::Dummy::DoSomethingOperation.call(
+      result = Operations::Dummy::DoSomethingOperation.(
         dummy_input: :bla, yet_another_dummy_input: :blabla
       )
       expect(result.data.validation_value).to eq true
@@ -99,7 +99,7 @@ RSpec.describe Operations::BaseOperation do
     context "no input" do
       it "raises exception" do
         expect do
-          Operations::Dummy::DoSomethingWithoutInputOperation.call
+          Operations::Dummy::DoSomethingWithoutInputOperation.()
         end.to raise_error(NotImplementedError)
       end
     end
@@ -107,7 +107,7 @@ RSpec.describe Operations::BaseOperation do
 
   describe "output" do
     subject do
-      Operations::Dummy::DoSomethingOperation.call(
+      Operations::Dummy::DoSomethingOperation.(
         dummy_input: :bla, yet_another_dummy_input: :blabla
       )
     end

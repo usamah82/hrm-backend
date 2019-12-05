@@ -10,14 +10,14 @@ module Mutations
       argument :administrator_name, String, required: true
 
       argument :company_name, String, required: true
-      argument :country_code, String, required: true
+      argument :company_country_code, String, required: true
 
       field :company, Types::Company, null: true
       field :errors, [Types::MutationError], null: false
 
       # Mutation resolver
       def resolve(**args)
-        result = Operations::Company::CreateCompanyOperation.call(args)
+        result = Operations::Company::CreateCompanyOperation.(args)
         render_fields(company: result.data, errors: result.errors)
       end
     end

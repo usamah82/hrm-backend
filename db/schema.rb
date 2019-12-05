@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 2019_09_30_035733) do
     t.uuid "company_id", null: false
     t.uuid "user_id", null: false
     t.string "name", null: false
+    t.string "email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_employees_on_company_id"

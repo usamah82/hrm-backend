@@ -9,7 +9,7 @@ describe Operations::User::CreateUserOperation do
       password_confirmation: "thisismysupersecurepassword"
     }
 
-    result = described_class.call(args)
+    result = described_class.(args)
 
     expect(result.data).to be_instance_of User
     expect(result.data.persisted?).to eq true

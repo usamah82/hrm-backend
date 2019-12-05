@@ -4,6 +4,7 @@ class CreateEmployees < ActiveRecord::Migration[5.2]
       t.references :company, type: :uuid, null: false
       t.references :user, type: :uuid, null: false
       t.string :name, null: false
+      t.string :email, null: false
       t.timestamps null: false
     end
   end
