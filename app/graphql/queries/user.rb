@@ -3,7 +3,7 @@ module Queries
   module User
     # Inclusion of domain queries
     def self.included(child_class)
-      child_class.field :me, Types::User, null: false do
+      child_class.field :me, Types::User, null: true do
         description "Returns the current user"
       end
     end

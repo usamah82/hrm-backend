@@ -3,7 +3,7 @@ module Queries
   module Company
     # Inclusion of domain queries
     def self.included(child_class)
-      child_class.field :company, Types::Company, null: false do
+      child_class.field :company, Types::Company, null: true do
         description "Returns the company for the current user"
       end
     end
