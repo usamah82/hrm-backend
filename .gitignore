@@ -34,3 +34,5 @@ coverage
 
 .yardoc
 /docs
+
+.DS_Store

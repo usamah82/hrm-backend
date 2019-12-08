@@ -10,7 +10,10 @@ RSpec.describe Mutations::User::CreateUser do
     prepare_query("
       mutation createUser($input: CreateUserInput!){
         createUser(input: $input){
-          user { email }
+          user {
+            email
+            name
+          }
           errors {
             path
             message
@@ -21,25 +24,27 @@ RSpec.describe Mutations::User::CreateUser do
   }
 
   describe "#resolve" do
-    let(:user) { build(:user) }
+    let(:email) { Faker::Internet.email }
+    let(:name) { Faker::Name.name }
 
     before {
       prepare_query_variables(
         input: {
-          email: user.email,
-          password: user.password,
-          passwordConfirmation: user.password_confirmation,
-          name: user.name
+          email: email,
+          name: name
         }
       )
     }
 
     it "returns user object" do
       result = execute_graphql_query!
+
       fields = result["data"]["createUser"]
       user_email = fields["user"]["email"]
+      user_name = fields["user"]["name"]
 
-      expect(user_email).to eq(user.email)
+      expect(user_email).to eq(email)
+      expect(user_name).to eq(name)
     end
   end
 end

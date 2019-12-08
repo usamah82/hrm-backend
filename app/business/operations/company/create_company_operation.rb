@@ -23,9 +23,7 @@ module Operations
         def create_user
           Operations::User::CreateUserOperation.(
             name: @input.administrator_name,
-            email: @input.administrator_email,
-            password: "12345678",
-            password_confirmation: "12345678"
+            email: @input.administrator_email
           ).data
         end
 
