@@ -13,10 +13,11 @@ module Operations
             name: @input.name
           )
 
-          # TODO!!!
-          # RegistrationMailer.successful_registration(
-          #   user, generated_password
-          # ).deliver_later
+          # TODO - set up job handler e.g DelayedJob
+          RegistrationMailer.with(
+            user: user,
+            generated_password: generated_password
+          ).successful_registration.deliver_now # TODO - deliver_later
 
           user
         end
