@@ -9,6 +9,7 @@ gem "rails", "~> 5.2.4"
 # Use postgresql as the database for Active Record
 gem "pg"
 
+gem "delayed_job_active_record"
 gem "devise"                                # Use devise as authentication module
 gem "devise-jwt", "~> 0.6.0"                # Use JWT token authentication with devise
 gem "bcrypt", "~> 3.1.7"                    # Use ActiveModel has_secure_password
