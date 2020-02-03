@@ -54,7 +54,7 @@ end
 
 
 group :test do
-  gem "database_cleaner", "~> 1.6"
+  gem "database_cleaner", "~> 1.8"
   gem "faker", "~> 2.10"
   gem "shoulda-matchers", "4.2.0"
   gem "rails-controller-testing"
