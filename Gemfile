@@ -55,7 +55,7 @@ end
 
 group :test do
   gem "database_cleaner", "~> 1.8"
-  gem "faker", "~> 2.10"
+  gem "faker", "~> 2.15"
   gem "shoulda-matchers", "4.2.0"
   gem "rails-controller-testing"
   gem "simplecov", require: false
